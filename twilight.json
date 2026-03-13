@@ -1,7 +1,7 @@
 {
   "version": "1.0.0",
   "theme_name": "LuluOro",
-  "repo_url": "https://github.com/salla-theme/luluoro",
+  "repo_url": "https://github.com/yaqoot4zain-del/test-glm5",
   "support_url": "https://salla.dev",
   "author": {
     "name": "LuluOro Theme Developer",
@@ -66,7 +66,7 @@
       "value": ""
     },
     {
-      "type": "string",
+      "type": "boolean",
       "id": "show_announcement_bar",
       "label": {
         "ar": "إظهار شريط الإعلانات",
@@ -96,7 +96,7 @@
       "value": "Discover exquisite jewelry crafted with precision and passion."
     },
     {
-      "type": "string",
+      "type": "boolean",
       "id": "newsletter_enabled",
       "label": {
         "ar": "تفعيل النشرة البريدية",
