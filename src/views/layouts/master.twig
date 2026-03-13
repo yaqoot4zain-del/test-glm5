@@ -26,34 +26,43 @@
     
     <style>
         :root {
-            --primary-color: {{ theme.settings.get('primary_color') ?? '#B8860B' }};
-            --secondary-color: {{ theme.settings.get('secondary_color') ?? '#1a1a1a' }};
-            --accent-color: {{ theme.settings.get('accent_color') ?? '#D4AF37' }};
+            /* LuluOro Brand Colors */
+            --gold-primary: #B8860B;
+            --gold-light: #D4AF37;
+            --gold-dark: #8B6914;
+            --black: #1a1a1a;
+            --white: #ffffff;
+            --off-white: #FAF9F6;
+            --cream: #F5F3EF;
             --text-color: #333333;
             --text-light: #666666;
             --text-muted: #999999;
-            --bg-color: #ffffff;
-            --bg-light: #f9f9f9;
-            --bg-dark: #1a1a1a;
             --border-color: #e5e5e5;
             --border-light: #f0f0f0;
-            --font-heading: 'Playfair Display', serif;
-            --font-body: 'Inter', sans-serif;
-            --transition-fast: 0.2s ease;
-            --transition-normal: 0.3s ease;
-            --transition-slow: 0.5s ease;
-            --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
-            --shadow-md: 0 4px 12px rgba(0,0,0,0.1);
-            --shadow-lg: 0 10px 40px rgba(0,0,0,0.15);
+            
+            /* Typography */
+            --font-heading: 'Playfair Display', Georgia, serif;
+            --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            
+            /* Spacing */
             --container-width: 1400px;
             --header-height: 80px;
             --header-height-mobile: 60px;
+            
+            /* Transitions */
+            --transition-fast: 0.2s ease;
+            --transition-normal: 0.3s ease;
+            --transition-slow: 0.5s ease;
+            
+            /* Shadows */
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.1);
+            --shadow-lg: 0 10px 40px rgba(0,0,0,0.15);
         }
         
         {% if store.locale.code == 'ar' %}
         :root {
-            --font-heading: 'Playfair Display', serif;
-            --font-body: 'Inter', 'Noto Sans Arabic', sans-serif;
+            --font-body: 'Inter', 'Noto Sans Arabic', 'Segoe UI', sans-serif;
         }
         {% endif %}
     </style>
@@ -69,8 +78,12 @@
         <div class="announcement-bar" id="announcement-bar">
             <div class="container">
                 <div class="announcement-bar__content">
-                    <p class="announcement-bar__text">{{ theme.settings.get('announcement_text') ?? 'Join the Insiders Club' }}</p>
-                    <a href="#" class="announcement-bar__link">{{ trans('elements.common.learn_more') }}</a>
+                    <p class="announcement-bar__text">{{ theme.settings.get('announcement_text') ?? 'Free Shipping on Orders Over 500 SAR' }}</p>
+                    <button class="announcement-bar__close" id="announcement-close">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 6L6 18M6 6l12 12"/>
+                        </svg>
+                    </button>
                 </div>
             </div>
         </div>
@@ -78,7 +91,71 @@
         {% endblock %}
         
         {% block header %}
-        {% include 'components/header/main.twig' %}
+        <header class="header" id="header">
+            <div class="container">
+                <div class="header__inner">
+                    <div class="header__left">
+                        <button class="header__menu-toggle" id="menu-toggle" aria-label="Menu">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M3 12h18M3 6h18M3 18h18"/>
+                            </svg>
+                        </button>
+                    </div>
+                    
+                    <div class="header__logo">
+                        {% if theme.settings.get('logo') %}
+                        <a href="{{ store.url }}">
+                            <img src="{{ theme.settings.get('logo') }}" alt="{{ store.name }}" class="header__logo-img">
+                        </a>
+                        {% else %}
+                        <a href="{{ store.url }}" class="header__logo-text">{{ store.name }}</a>
+                        {% endif %}
+                    </div>
+                    
+                    <nav class="header__nav" id="main-nav">
+                        <ul class="nav-menu">
+                            {% for item in menu('main-menu') %}
+                            <li class="nav-menu__item {% if item.children|length > 0 %}has-dropdown{% endif %}">
+                                <a href="{{ item.url }}" class="nav-menu__link">{{ item.name }}</a>
+                                {% if item.children|length > 0 %}
+                                <ul class="dropdown-menu">
+                                    {% for child in item.children %}
+                                    <li><a href="{{ child.url }}" class="dropdown-menu__link">{{ child.name }}</a></li>
+                                    {% endfor %}
+                                </ul>
+                                {% endif %}
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </nav>
+                    
+                    <div class="header__right">
+                        <button class="header__icon-btn" id="search-toggle" aria-label="{{ trans('elements.common.search') }}">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="11" cy="11" r="8"/>
+                                <path d="M21 21l-4.35-4.35"/>
+                            </svg>
+                        </button>
+                        
+                        <a href="{{ store.wishlist_url }}" class="header__icon-btn" aria-label="{{ trans('elements.common.wishlist') }}">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                            </svg>
+                            <span class="header__wishlist-count" id="wishlist-count">0</span>
+                        </a>
+                        
+                        <a href="{{ store.cart_url }}" class="header__icon-btn header__cart" aria-label="{{ trans('elements.common.cart') }}">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+                                <line x1="3" y1="6" x2="21" y2="6"/>
+                                <path d="M16 10a4 4 0 0 1-8 0"/>
+                            </svg>
+                            <span class="header__cart-count" id="cart-count">0</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </header>
         {% endblock %}
         
         <main id="main-content" class="main-content">
@@ -86,48 +163,106 @@
         </main>
         
         {% block footer %}
-        {% include 'components/footer/main.twig' %}
+        <footer class="footer">
+            <div class="container">
+                <div class="footer__newsletter">
+                    <h3 class="footer__newsletter-title">{{ trans('elements.footer.join_newsletter') }}</h3>
+                    <p class="footer__newsletter-text">{{ trans('elements.footer.newsletter_text') }}</p>
+                    <form class="footer__newsletter-form" action="{{ store.newsletter_url }}" method="post">
+                        <input type="email" name="email" placeholder="{{ trans('elements.footer.email_placeholder') }}" required>
+                        <button type="submit" class="btn btn--gold">{{ trans('elements.footer.subscribe') }}</button>
+                    </form>
+                </div>
+                
+                <div class="footer__grid">
+                    <div class="footer__column">
+                        <h4 class="footer__column-title">{{ store.name }}</h4>
+                        <p class="footer__about">{{ theme.settings.get('footer_about_text') ?? 'Discover exquisite jewelry crafted with precision and passion.' }}</p>
+                    </div>
+                    
+                    <div class="footer__column">
+                        <h4 class="footer__column-title">{{ trans('elements.footer.quick_links') }}</h4>
+                        <ul class="footer__links">
+                            {% for item in menu('footer-menu') %}
+                            <li><a href="{{ item.url }}">{{ item.name }}</a></li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    
+                    <div class="footer__column">
+                        <h4 class="footer__column-title">{{ trans('elements.footer.contact') }}</h4>
+                        <ul class="footer__contact">
+                            {% if store.phone %}
+                            <li><a href="tel:{{ store.phone }}">{{ store.phone }}</a></li>
+                            {% endif %}
+                            {% if store.email %}
+                            <li><a href="mailto:{{ store.email }}">{{ store.email }}</a></li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                    
+                    <div class="footer__column">
+                        <h4 class="footer__column-title">{{ trans('elements.footer.follow_us') }}</h4>
+                        <div class="footer__social">
+                            {% if store.social_links.instagram %}
+                            <a href="{{ store.social_links.instagram }}" target="_blank" aria-label="Instagram">
+                                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                            </a>
+                            {% endif %}
+                            {% if store.social_links.twitter %}
+                            <a href="{{ store.social_links.twitter }}" target="_blank" aria-label="Twitter">
+                                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/></svg>
+                            </a>
+                            {% endif %}
+                            {% if store.social_links.snapchat %}
+                            <a href="{{ store.social_links.snapchat }}" target="_blank" aria-label="Snapchat">
+                                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.206.793c.99 0 4.837.283 6.525 4.46.57 1.413.457 3.719.361 5.713l-.006.126c-.012.219-.022.429-.03.626-.062 1.366-.113 2.464-.538 3.179-.578.97-1.464 1.485-2.464 1.432-.64-.033-1.16-.314-1.485-.553-.278.197-.642.426-1.088.553-.303.087-.627.131-.96.131-.414 0-.85-.061-1.3-.182l-.134-.034c-.416-.104-.93-.233-1.484-.233-.423 0-.842.073-1.246.217l-.083.03c-.542.2-1.024.378-1.576.378-.155 0-.312-.015-.466-.044-.736-.14-1.276-.594-1.632-1.107-.34.074-.71.117-1.102.117-1.386 0-2.815-.582-3.58-1.457C.737 13.713.096 11.957.096 9.733c0-1.378.262-2.662.777-3.814C2.037 3.535 4.033.793 12.206.793zm.001 2c-7.259 0-8.832 2.126-9.526 3.597-.421.892-.635 1.928-.635 3.076 0 1.856.488 3.235 1.445 4.096.488.439 1.395.819 2.17.819.277 0 .525-.035.738-.104l.04-.013c.11-.034.22-.071.336-.097.233-.052.479-.056.736-.012.378.064.71.198 1.01.372.404-.36.92-.61 1.513-.73.24-.047.483-.07.723-.07.59 0 1.1.115 1.57.233l.124.03c.298.073.583.116.847.116.19 0 .358-.022.508-.065.36-.104.687-.3.948-.462.296-.183.634-.396 1.1-.396.316 0 .633.088.966.268.17.091.313.19.434.29.353.28.696.534 1.135.534.458 0 .733-.33.884-.556.243-.365.31-1.327.36-2.386.008-.174.017-.356.026-.546.098-2.034.207-4.332-.284-5.546-1.364-3.383-4.473-3.594-5.078-3.594z"/></svg>
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="footer__bottom">
+                    <p class="footer__copyright">&copy; {{ 'now'|date('Y') }} {{ store.name }}. {{ trans('elements.footer.all_rights_reserved') }}</p>
+                    <div class="footer__payment">
+                        <img src="{{ 'images/payment-methods.png' | asset }}" alt="Payment Methods" class="footer__payment-img">
+                    </div>
+                </div>
+            </div>
+        </footer>
         {% endblock %}
         
         {% block overlay %}
         <div class="page-overlay" id="page-overlay"></div>
+        <div class="mobile-nav-overlay" id="mobile-nav-overlay"></div>
         {% endblock %}
         
         {% block modals %}
         <div class="modal" id="modal-search" role="dialog" aria-hidden="true">
             <div class="modal__backdrop" data-modal-close></div>
             <div class="modal__content">
-                <button class="modal__close" data-modal-close>
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <button class="modal__close" data-modal-close aria-label="{{ trans('elements.common.close') }}">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 6L6 18M6 6l12 12"/>
                     </svg>
                 </button>
-                <div class="modal__body">
-                    <form class="search-form" action="{{ store.search_url }}">
-                        <input type="search" name="q" class="search-form__input" placeholder="{{ trans('elements.common.search_placeholder') }}">
-                        <button type="submit" class="search-form__button">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2"/>
-                                <path d="M21 21L16.65 16.65" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                            </svg>
-                        </button>
-                    </form>
-                </div>
+                <form class="search-form" action="{{ store.search_url }}" method="get">
+                    <input type="search" name="q" placeholder="{{ trans('elements.common.search_placeholder') }}" class="search-form__input" autocomplete="off">
+                    <button type="submit" class="search-form__btn">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"/>
+                            <path d="M21 21l-4.35-4.35"/>
+                        </svg>
+                    </button>
+                </form>
             </div>
         </div>
         {% endblock %}
         
-        {% block cookie_consent %}
-        {% if salla.cookie_consent %}
-        {{ salla.cookie_consent }}
-        {% endif %}
-        {% endblock %}
+        <script src="{{ 'app.js' | asset }}"></script>
+        
+        {{ salla.body_close }}
     </div>
-    
-    {% block scripts %}
-    <script src="{{ 'js/theme.js' | asset }}"></script>
-    {% endblock %}
-    
-    {{ salla.body_close }}
 </body>
 </html>

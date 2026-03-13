@@ -7,39 +7,58 @@
     "author_email": "yaqoot4zain@gmail.com",
     "support_url": "https://salla.dev",
     "description": {
-        "ar": "ثيم أنيق للمجوهرات مع تصميم عصري وميزات متقدمة",
-        "en": "Elegant jewelry theme with modern design and advanced features"
+        "ar": "ثيم مجوهرات أنيق مستوحى من luluoro.com",
+        "en": "Elegant jewelry theme inspired by luluoro.com"
     },
     "features": [
+        "mega-menu",
+        "fonts",
+        "color",
+        "breadcrumb",
+        "unite-cards-height",
         "component-featured-products",
         "component-fixed-banner",
         "component-fixed-products",
-        "component-photos-slider",
         "component-products-slider",
+        "component-photos-slider",
         "component-parallax-background",
-        "component-random-testimonials",
         "component-testimonials",
         "component-square-photos",
         "component-store-features",
         "component-youtube",
+        "menu-images",
         "filters"
     ],
     "settings": [
         {
             "type": "boolean",
             "label": {
-                "ar": "شريط علوي داكن",
-                "en": "Dark Top Bar"
+                "ar": "إظهار شريط الإعلانات",
+                "en": "Show Announcement Bar"
             },
-            "id": "topnav_is_dark",
+            "id": "show_announcement_bar",
             "format": "switch",
-            "selected": false
+            "selected": true
         },
         {
             "type": "string",
-            "id": "placeholder",
-            "format": "hidden",
-            "value": "images/img_placeholder.png"
+            "id": "announcement_text",
+            "label": {
+                "ar": "نص الإعلان",
+                "en": "Announcement Text"
+            },
+            "format": "text",
+            "value": "Free Shipping on Orders Over 500 SAR"
+        },
+        {
+            "type": "string",
+            "id": "logo",
+            "label": {
+                "ar": "الشعار",
+                "en": "Logo"
+            },
+            "format": "image",
+            "value": ""
         },
         {
             "type": "string",
@@ -72,46 +91,6 @@
             "value": "#D4AF37"
         },
         {
-            "type": "string",
-            "id": "logo",
-            "label": {
-                "ar": "الشعار",
-                "en": "Logo"
-            },
-            "format": "image",
-            "value": ""
-        },
-        {
-            "type": "boolean",
-            "id": "show_announcement_bar",
-            "label": {
-                "ar": "إظهار شريط الإعلانات",
-                "en": "Show Announcement Bar"
-            },
-            "format": "switch",
-            "selected": true
-        },
-        {
-            "type": "string",
-            "id": "announcement_text",
-            "label": {
-                "ar": "نص الإعلان",
-                "en": "Announcement Text"
-            },
-            "format": "text",
-            "value": "Join the Insiders Club"
-        },
-        {
-            "type": "string",
-            "id": "footer_about_text",
-            "label": {
-                "ar": "نص حول المتجر في الفوتر",
-                "en": "Store About Text in Footer"
-            },
-            "format": "textarea",
-            "value": "Discover exquisite jewelry crafted with precision and passion."
-        },
-        {
             "type": "boolean",
             "id": "newsletter_enabled",
             "label": {
@@ -120,6 +99,16 @@
             },
             "format": "switch",
             "selected": true
+        },
+        {
+            "type": "string",
+            "id": "footer_about_text",
+            "label": {
+                "ar": "نص حول المتجر",
+                "en": "Store About Text"
+            },
+            "format": "textarea",
+            "value": "Discover exquisite jewelry crafted with precision and passion."
         }
     ],
     "components": [
@@ -133,15 +122,19 @@
             "path": "home.hero-banner",
             "fields": [
                 {
-                    "id": "slides",
+                    "id": "hero_slides",
                     "type": "collection",
                     "format": "collection",
                     "required": true,
                     "minLength": 1,
                     "maxLength": 5,
+                    "label": {
+                        "ar": "شرائح البانر",
+                        "en": "Hero Slides"
+                    },
                     "fields": [
                         {
-                            "id": "slides.image",
+                            "id": "hero_slides.image",
                             "type": "string",
                             "format": "image",
                             "label": {
@@ -151,7 +144,7 @@
                             "required": true
                         },
                         {
-                            "id": "slides.title",
+                            "id": "hero_slides.title",
                             "type": "string",
                             "label": {
                                 "ar": "العنوان",
@@ -159,7 +152,7 @@
                             }
                         },
                         {
-                            "id": "slides.subtitle",
+                            "id": "hero_slides.subtitle",
                             "type": "string",
                             "label": {
                                 "ar": "العنوان الفرعي",
@@ -167,15 +160,25 @@
                             }
                         },
                         {
-                            "id": "slides.button_text",
+                            "id": "hero_slides.text",
+                            "type": "string",
+                            "format": "textarea",
+                            "label": {
+                                "ar": "النص",
+                                "en": "Text"
+                            }
+                        },
+                        {
+                            "id": "hero_slides.button_text",
                             "type": "string",
                             "label": {
                                 "ar": "نص الزر",
                                 "en": "Button Text"
-                            }
+                            },
+                            "value": "SHOP NOW"
                         },
                         {
-                            "id": "slides.button_url",
+                            "id": "hero_slides.button_url",
                             "type": "items",
                             "format": "variable-list",
                             "label": {
@@ -188,68 +191,13 @@
             ]
         },
         {
-            "key": "collections-grid",
+            "key": "featured-products",
             "title": {
-                "ar": "شبكة المجموعات",
-                "en": "Collections Grid"
-            },
-            "icon": "sicon-grid",
-            "path": "home.collections-grid",
-            "fields": [
-                {
-                    "id": "section_title",
-                    "type": "string",
-                    "label": {
-                        "ar": "عنوان القسم",
-                        "en": "Section Title"
-                    }
-                },
-                {
-                    "id": "collections",
-                    "type": "collection",
-                    "format": "collection",
-                    "required": true,
-                    "minLength": 2,
-                    "maxLength": 6,
-                    "fields": [
-                        {
-                            "id": "collections.image",
-                            "type": "string",
-                            "format": "image",
-                            "label": {
-                                "ar": "صورة المجموعة",
-                                "en": "Collection Image"
-                            }
-                        },
-                        {
-                            "id": "collections.title",
-                            "type": "string",
-                            "label": {
-                                "ar": "اسم المجموعة",
-                                "en": "Collection Name"
-                            }
-                        },
-                        {
-                            "id": "collections.url",
-                            "type": "items",
-                            "format": "variable-list",
-                            "label": {
-                                "ar": "رابط المجموعة",
-                                "en": "Collection URL"
-                            }
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            "key": "products-carousel",
-            "title": {
-                "ar": "عرض المنتجات",
-                "en": "Products Carousel"
+                "ar": "منتجات مميزة",
+                "en": "Featured Products"
             },
             "icon": "sicon-products-slider",
-            "path": "home.products-carousel",
+            "path": "home.featured-products",
             "fields": [
                 {
                     "id": "section_title",
@@ -257,49 +205,18 @@
                     "label": {
                         "ar": "عنوان القسم",
                         "en": "Section Title"
-                    }
-                },
-                {
-                    "id": "products_type",
-                    "type": "items",
-                    "format": "dropdown-list",
-                    "label": {
-                        "ar": "نوع المنتجات",
-                        "en": "Products Type"
                     },
-                    "options": [
-                        {
-                            "label": {
-                                "ar": "الأكثر مبيعاً",
-                                "en": "Best Sellers"
-                            },
-                            "value": "bestseller"
-                        },
-                        {
-                            "label": {
-                                "ar": "جديد",
-                                "en": "New Arrivals"
-                            },
-                            "value": "new"
-                        },
-                        {
-                            "label": {
-                                "ar": "مميز",
-                                "en": "Featured"
-                            },
-                            "value": "featured"
-                        }
-                    ]
+                    "value": "Bestsellers"
                 },
                 {
-                    "id": "products_count",
+                    "id": "limit",
                     "type": "string",
                     "format": "number",
                     "label": {
                         "ar": "عدد المنتجات",
                         "en": "Products Count"
                     },
-                    "value": "8"
+                    "value": "4"
                 }
             ]
         },
@@ -313,47 +230,23 @@
             "path": "home.brand-story",
             "fields": [
                 {
-                    "id": "title",
-                    "type": "string",
-                    "label": {
-                        "ar": "العنوان",
-                        "en": "Title"
-                    }
-                },
-                {
-                    "id": "content",
-                    "type": "string",
-                    "format": "textarea",
-                    "label": {
-                        "ar": "المحتوى",
-                        "en": "Content"
-                    }
-                },
-                {
-                    "id": "image",
+                    "id": "brand_image",
                     "type": "string",
                     "format": "image",
                     "label": {
-                        "ar": "الصورة",
-                        "en": "Image"
+                        "ar": "صورة القصة",
+                        "en": "Story Image"
                     }
                 },
                 {
-                    "id": "button_text",
+                    "id": "brand_story",
                     "type": "string",
+                    "format": "textarea",
                     "label": {
-                        "ar": "نص الزر",
-                        "en": "Button Text"
-                    }
-                },
-                {
-                    "id": "button_url",
-                    "type": "items",
-                    "format": "variable-list",
-                    "label": {
-                        "ar": "رابط الزر",
-                        "en": "Button URL"
-                    }
+                        "ar": "نص القصة",
+                        "en": "Story Text"
+                    },
+                    "value": "At LuluOro, we believe that jewelry should be as unique as the person wearing it. Each piece is crafted with precision and passion, combining traditional artistry with contemporary design."
                 }
             ]
         },
@@ -367,22 +260,28 @@
             "path": "home.instagram-feed",
             "fields": [
                 {
-                    "id": "section_title",
-                    "type": "string",
+                    "id": "show_instagram_feed",
+                    "type": "boolean",
+                    "format": "switch",
                     "label": {
-                        "ar": "عنوان القسم",
-                        "en": "Section Title"
-                    }
+                        "ar": "إظهار تغذية انستغرام",
+                        "en": "Show Instagram Feed"
+                    },
+                    "selected": true
                 },
                 {
-                    "id": "images",
+                    "id": "instagram_images",
                     "type": "collection",
                     "format": "collection",
                     "minLength": 4,
-                    "maxLength": 8,
+                    "maxLength": 6,
+                    "label": {
+                        "ar": "صور انستغرام",
+                        "en": "Instagram Images"
+                    },
                     "fields": [
                         {
-                            "id": "images.image",
+                            "id": "instagram_images.image",
                             "type": "string",
                             "format": "image",
                             "label": {
@@ -391,7 +290,57 @@
                             }
                         },
                         {
-                            "id": "images.url",
+                            "id": "instagram_images.url",
+                            "type": "string",
+                            "format": "url",
+                            "label": {
+                                "ar": "الرابط",
+                                "en": "URL"
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "key": "shop-the-looks",
+            "title": {
+                "ar": "تسوق الإطلالات",
+                "en": "Shop the Looks"
+            },
+            "icon": "sicon-layout-grid",
+            "path": "home.shop-looks",
+            "fields": [
+                {
+                    "id": "shop_the_looks",
+                    "type": "collection",
+                    "format": "collection",
+                    "minLength": 2,
+                    "maxLength": 6,
+                    "label": {
+                        "ar": "الإطلالات",
+                        "en": "Looks"
+                    },
+                    "fields": [
+                        {
+                            "id": "shop_the_looks.image",
+                            "type": "string",
+                            "format": "image",
+                            "label": {
+                                "ar": "الصورة",
+                                "en": "Image"
+                            }
+                        },
+                        {
+                            "id": "shop_the_looks.title",
+                            "type": "string",
+                            "label": {
+                                "ar": "العنوان",
+                                "en": "Title"
+                            }
+                        },
+                        {
+                            "id": "shop_the_looks.url",
                             "type": "items",
                             "format": "variable-list",
                             "label": {
